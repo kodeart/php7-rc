@@ -1,4 +1,4 @@
-# PHP 7 RC5 - Vagrant build
+# PHP 7 RC7 - Vagrant build
 
 Shell provisioned Vagrant build for testing the PHP 7.0.0RC7 version.
 
