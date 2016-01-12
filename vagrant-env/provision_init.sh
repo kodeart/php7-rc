@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 ENV_DIR="/vagrant/vagrant-env"
-PHP_RELEASE="php-7.0.0RC7"
+PHP_RELEASE="php-7.0.2"
 PHP_ARCHIVE="$PHP_RELEASE.tar.gz"
+XDEBUG_RELEASE="xdebug-2.4.0rc3"
+XDEBUG_ARCHIVE="$XDEBUG_RELEASE.tgz"
 
 apt-get update
 apt-get -y dist-upgrade
@@ -20,12 +22,12 @@ if [ ! -d /etc/php7 ]; then
 	mkdir /etc/php7/extra
 fi;
 
-echo "==== Download & Extracting PHP7 ===="
-wget -qO /root/$PHP_ARCHIVE https://downloads.php.net/~ab/$PHP_ARCHIVE
+echo "==== Download and Extracting $PHP_RELEASE ===="
+wget -qO /root/$PHP_ARCHIVE http://de1.php.net/get/$PHP_ARCHIVE/from/this/mirror
 cd /root
 tar -zxf $PHP_ARCHIVE
 
-echo "==== Compiling & Installing PHP7 ===="
+echo "==== Compiling and Installing $PHP_RELEASE ===="
 cd $PHP_RELEASE
 $ENV_DIR/php/configure.sh
 make
@@ -43,6 +45,31 @@ rm "/etc/apache2/sites-enabled/000-default"
 cp $ENV_DIR/apache2/vhost.conf /etc/apache2/sites-enabled/default.conf
 cp $ENV_DIR/apache2/php7.conf /etc/apache2/mods-enabled/php7.conf
 cp $ENV_DIR/php/php.ini /etc/php7/php.ini
+
+echo "==== Installing $XDEBUG_RELEASE ===="
+wget -q "http://xdebug.org/files/$XDEBUG_ARCHIVE"
+
+# fix retarded stupid debiliated forder name
+rm -rf $XDEBUG_RELEASE
+mkdir $XDEBUG_RELEASE
+tar -xzf $XDEBUG_ARCHIVE -C $XDEBUG_RELEASE --strip-components 1
+
+cd $XDEBUG_RELEASE
+phpize
+./configure
+make
+cp modules/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012
+cd ..
+rm $XDEBUG_ARCHIVE
+rm -rf $XDEBUG_RELEASE
+
+echo "==== Installing Composer ===="
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+echo "==== Installing PHPUnit ===="
+wget -q https://phar.phpunit.de/phpunit.phar
+mv phpunit.phar /usr/local/bin/phpunit
+chmod +x /usr/local/bin/phpunit
+
+# start Apache again
 /etc/init.d/apache2 start
-
-

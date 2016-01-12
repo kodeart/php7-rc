@@ -1,10 +1,10 @@
-# PHP 7 RC7 - Vagrant build
+# PHP 7 - Vagrant build
 
 Shell provisioned Vagrant build for testing the PHP 7.0.0RC7 version.
 
 - box available at 192.168.50.7
 - Debian 7.5 x64 (Wheezy)
-- PHP 7 RC7
+- PHP 7.0.2
 - Apache 2.2.22
 
 
@@ -30,7 +30,7 @@ This app should be accessible at `http://192.168.50.7/some-project`
 
 ## Missing
 
-- MySQL (because nothing stops you to connect to your host database, if any)
+- MySQL (connect to your host machine database, if any)
 
 
 ## Easy modify

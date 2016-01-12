@@ -15,7 +15,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell, path: "vagrant-env/provision.sh", run: "always"
   config.vm.network "private_network", ip:"192.168.50.7"
   config.vm.provider "virtualbox" do |v|
-      v.name = "PHP-7.0.0-RC7"
+      v.name = "PHP-7.0.2"
       v.memory = 1024
   end
 
